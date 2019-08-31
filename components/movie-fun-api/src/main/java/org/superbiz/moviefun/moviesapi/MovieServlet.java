@@ -1,21 +1,6 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.superbiz.moviefun.moviesapi;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -31,7 +16,8 @@ public class MovieServlet extends HttpServlet {
 
     private static final long serialVersionUID = -5832176047021911038L;
 
-    public static int PAGE_SIZE = 5;
+    @Value("${movies.pagesize}")
+    public int pageSize;
 
     private MoviesClient moviesClient;
 
@@ -97,8 +83,8 @@ public class MovieServlet extends HttpServlet {
             } catch (Exception e) {
             }
 
-            int pageCount = (count / PAGE_SIZE);
-            if (pageCount == 0 || count % PAGE_SIZE != 0) {
+            int pageCount = (count / pageSize);
+            if (pageCount == 0 || count % pageSize != 0) {
                 pageCount++;
             }
 
@@ -110,13 +96,13 @@ public class MovieServlet extends HttpServlet {
                 page = pageCount;
             }
 
-            int start = (page - 1) * PAGE_SIZE;
+            int start = (page - 1) * pageSize;
             List<MovieInfo> range;
 
             if (StringUtils.isEmpty(key) || StringUtils.isEmpty(field)) {
-                range = moviesClient.findAll(start, PAGE_SIZE);
+                range = moviesClient.findAll(start, pageSize);
             } else {
-                range = moviesClient.findRange(field, key, start, PAGE_SIZE);
+                range = moviesClient.findRange(field, key, start, pageSize);
             }
 
             int end = start + range.size();
