@@ -2,5 +2,5 @@ apply from: "../../java.gradle"
 
 dependencies {
     compile "org.apache.tika:tika-core:1.14"
-    compile "com.amazonaws:aws-java-sdk:1.11.74"
+    compile "com.google.cloud:google-cloud-storage:1.84.0"
 }
